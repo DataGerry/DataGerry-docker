@@ -1,7 +1,7 @@
 services:
 
   dg-frontend:
-    image: becongmbh/datagerry_frontend:latest
+    image: becongmbh/datagerry-frontend:latest
     container_name: dg-frontend
     ports:
       - 80:80
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   dg-backend:
-    image: becongmbh/datagerry_backend:latest
+    image: becongmbh/datagerry-backend:latest
     container_name: dg-backend
     depends_on:
       - mongodb
