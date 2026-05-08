@@ -8,7 +8,7 @@ Das Setup startet drei Container:
 |---------------|------------------------------------|---------------------------------------|
 | `dg-frontend` | `becongmbh/datagerry-frontend`     | Nginx-basiertes Web-Frontend          |
 | `dg-backend`  | `becongmbh/datagerry-backend`      | DataGerry API / Application Server    |
-| `mongodb`     | `mongo:6.0.25`                     | MongoDB als Datenbank                 |
+| `dg-mongodb`  | `mongo:6.0.25`                     | MongoDB als Datenbank                 |
 
 ---
 
@@ -25,9 +25,13 @@ Das Setup startet drei Container:
 ```bash
 # Repository klonen
 git clone https://github.com/DataGerry/DataGerry-docker.git
-cd DataGerry-docker
+
+# Default-Config erstellen
+cp /opt/DataGerry-docker/conf/cmdb_default.conf /opt/DataGerry-docker/conf/cmdb.conf
+cp /opt/DataGerry-docker/conf/nginx_default.conf /opt/DataGerry-docker/conf/nginx.conf
 
 # Container starten
+cd DataGerry-docker
 docker compose up -d
 ```
 
@@ -78,27 +82,43 @@ Standardmäßig läuft DataGerry über HTTP. Um HTTPS zu aktivieren:
 
 1. **Zertifikate ablegen:**
    ```bash
-   cp dein-zertifikat.crt conf/ssl/certs/
+   cp dein-zertifikat.pem  conf/ssl/certs/
    cp dein-schluessel.key  conf/ssl/private/
    ```
 
-2. **`docker-compose.yml` anpassen** – im Service `dg-frontend` (und optional `dg-backend`) die folgenden Zeilen umschalten:
-
-   ```yaml
-   volumes:
-   # comment for ssl
-   #  - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
-   # uncomment for ssl
-     - ./conf/nginx-ssl.conf:/etc/nginx/conf.d/default.conf
-     - ./conf/ssl/certs/:/etc/ssl/certs/
-     - ./conf/ssl/private/:/etc/ssl/private/
+2. **`conf/nginx-ssl.conf`** - Dateinamen deiner Zertifikate anpassen.
+   ```bash
+   ssl_certificate /etc/ssl/certs/dein-zertifikat.pem;
+   ssl_certificate_key /etc/ssl/private/dein-schluessel.key;
    ```
 
-3. **`conf/nginx-ssl.conf`** an die Dateinamen deiner Zertifikate anpassen.
-
-4. **Stack neu starten:**
+3. **`conf/cmdb.conf`** - SSL aktivieren und Dateinamen deiner Zertifikate anpassen.
    ```bash
-   docker compose up -d --force-recreate dg-frontend
+   ssl = true
+   certfile = /etc/ssl/certs/dein-zertifikat.pem
+   keyfile = /etc/ssl/private/dein-schluessel.key
+   ```
+
+4. **`docker-compose.yml` anpassen** – im Service `dg-frontend` und `dg-backend` die folgenden Zeilen umschalten:
+
+   ```yaml
+   dg-frontend:
+   # comment for ssl
+   # - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
+   # uncomment for ssl
+   - ./conf/nginx-ssl.conf:/etc/nginx/conf.d/default.conf
+   - ./conf/ssl/certs/:/etc/ssl/certs/
+   - ./conf/ssl/private/:/etc/ssl/private/
+
+   dg-backend:
+   # uncomment for ssl
+   - ./conf/ssl/certs/:/etc/ssl/certs/
+   - ./conf/ssl/private/:/etc/ssl/private/
+   ```
+
+5. **Stack neu starten:**
+   ```bash
+   docker compose up -d
    ```
 
 DataGerry ist anschließend unter `https://<dein-host>` erreichbar.
@@ -127,7 +147,8 @@ docker compose down -v                  # ⚠️ Container UND Volumes entfernen
 
 ### Auf neue Version aktualisieren
 ```bash
-docker compose pull
+docker compose down
+git pull
 docker compose up -d
 ```
 
