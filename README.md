@@ -14,8 +14,8 @@ Das Setup startet drei Container:
 
 ## Voraussetzungen
 
-- [Docker](https://docs.docker.com/get-docker/) (≥ 20.10)
-- [Docker Compose](https://docs.docker.com/compose/install/) (v2)
+- [Docker Engine](https://docs.docker.com/engine/installation/) (≥ 20.10)
+- [Docker Compose](https://docs.docker.com/compose/install/) (opt. Docker Engine installation already includes Docker Compose Plugin)
 - Freie Ports: **80**, **443** (Frontend) und **4000** (Backend-API)
 
 ---
