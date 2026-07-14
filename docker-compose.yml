@@ -11,6 +11,7 @@ services:
     volumes:
 # comment for ssl
       - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./conf/app-config.json:/etc/datagerry/app-config.json
 # uncomment for ssl
 #      - ./conf/nginx-ssl.conf:/etc/nginx/conf.d/default.conf
 #      - ./conf/ssl/certs/:/etc/ssl/certs/
@@ -26,6 +27,7 @@ services:
       - 4000:4000
     volumes:
       - ./conf/cmdb.conf:/etc/datagerry/cmdb.conf
+      - ./conf/app-config.json:/etc/datagerry/app-config.json
 # uncomment for ssl
 #      - ./conf/ssl/certs/:/etc/ssl/certs/
 #      - ./conf/ssl/private/:/etc/ssl/private/
@@ -35,7 +37,7 @@ services:
     restart: unless-stopped
 
   mongodb:
-    image: mongo:6.0.25
+    image: mongo:7.0.37
     container_name: dg-mongodb
     restart: unless-stopped
     volumes:
