@@ -28,6 +28,7 @@ git clone https://github.com/DataGerry/DataGerry-docker.git
 
 # Default-Config erstellen
 cp /opt/DataGerry-docker/conf/cmdb_default.conf /opt/DataGerry-docker/conf/cmdb.conf
+cp /opt/DataGerry-docker/conf/app-config_default.json /opt/DataGerry-docker/conf/app-config.json
 cp /opt/DataGerry-docker/conf/nginx_default.conf /opt/DataGerry-docker/conf/nginx.conf
 
 # Container starten
@@ -55,6 +56,7 @@ Beim ersten Start wird ein Admin-Benutzer angelegt. Die Zugangsdaten findest du 
     ├── nginx.conf           # Nginx-Konfiguration (HTTP)
     ├── nginx-ssl.conf       # Nginx-Konfiguration (HTTPS)
     ├── cmdb.conf            # DataGerry-Backend-Konfiguration
+    ├── app-config.json      # DataGerry-Frontend-Konfiguration
     └── ssl/
         ├── certs/           # SSL-Zertifikate (.crt)
         └── private/         # SSL-Schlüssel (.key)
@@ -69,6 +71,10 @@ Beim ersten Start wird ein Admin-Benutzer angelegt. Die Zugangsdaten findest du 
 Die Datei `cmdb.conf` wird ins Backend gemountet (`/etc/datagerry/cmdb.conf`) und steuert das Verhalten der DataGerry-Instanz (Datenbank-Verbindung, Auth-Provider, Logging etc.).
 
 > **Hinweis:** Der MongoDB-Host wird bereits per Environment-Variable `DATAGERRY_Database_host=dg-mongodb` im `docker-compose.yml` gesetzt und überschreibt entsprechende Werte aus der `cmdb.conf`.
+
+### Frontend (`conf/app-config.json`)
+
+Die Datei `app-config.json` wird ins Frontend und ins Backend gemountet (`/etc/datagerry/app-config.json`) und enthält die Parameter für die Verbindung zum Backend.
 
 ### Frontend (`conf/nginx.conf`)
 
