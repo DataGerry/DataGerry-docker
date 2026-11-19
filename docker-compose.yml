@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 
   mongodb:
-    image: mongo:7.0.37
+    image: mongo:7.0.45
     container_name: dg-mongodb
     restart: unless-stopped
     volumes:
